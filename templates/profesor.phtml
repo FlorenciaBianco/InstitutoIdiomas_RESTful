@@ -1,0 +1,30 @@
+<?php require 'templates/layouts/header.phtml' ?>
+
+<div class="container text-left my-4 d-flex flex-column" style="background-color: #f6f6f6">
+    <div class="my-4 d-flex align-items-start justify-content-start">
+        <div class="row" style="width: 100%;">
+            <div class="col-5"></div>   
+            <div class="col-5"></div>
+            <div class="col-2">
+        
+            </div>
+        </div>
+
+        <ul class="list-group d-flex flex-column align-items-start" style="width: 100%;">
+            <?php if ($profesor->imagen): ?>
+                <img src="<?= BASE_URL.$profesor->imagen ?>" alt="Imagen de <?= htmlspecialchars($profesor->nombre) ?>" style="width: 150px; height: auto; border-radius: 50%; margin-bottom: 10px;">
+            <?php endif ?>
+            
+            <li class="list-group-item">
+                <div class="label">
+                    <b>Nombre: <?= htmlspecialchars($profesor->nombre) ?></b> <br>
+                    <b>Idioma: <?= htmlspecialchars($indiceIdiomas[$profesor->id_idioma]) ?></b><br>
+                    Telefono: <?= htmlspecialchars($profesor->telefono) ?> <br>
+                    Email: <?= htmlspecialchars($profesor->email) ?>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<?php require 'templates/layouts/footer.phtml' ?>

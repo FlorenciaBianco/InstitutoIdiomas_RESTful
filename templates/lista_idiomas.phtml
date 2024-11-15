@@ -1,0 +1,40 @@
+
+<?php require 'templates/layouts/header.phtml' ?>
+
+<div class="container text-center my-4 d-flex flex-column" style="background-color: #f6f6f6">
+    <div class="my-4 align-items-center justify-content-center high-auto">
+        <div class= "row">
+            <div class="col-5"></div>   
+            <div class="col-5"></div>
+            <div class="col-2">
+                <div class= "button my-2">
+                    <a href="<?= BASE_URL ?>agregar/idioma" type='button' class='btn btn-success'>Agregar Idioma</a>
+                </div>
+            </div>
+        </div>
+
+        <ul class="list-group">
+            <?php foreach($idiomas as $idioma): ?>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                        
+                    <?php if ($idioma->imagen):?>
+                        <img src="<?= BASE_URL.$idioma->imagen ?>"/>
+                    <?php endif ?>
+                    <div class="label">
+                        <b><?= htmlspecialchars($idioma->nombre) ?></b> | <?=substr($idioma->descripcion,0,50)?> | (Modulos <?= $idioma->modulos ?>)
+                    </div>
+
+                    <div class= "ml-auto">
+                        <a href="<?= BASE_URL ?>profesores/<?= $idioma->id_idioma ?>" type='button' class='btn btn-warning'>Profesores</a>
+                        <a href="<?= BASE_URL ?>Modificar/idioma/<?= $idioma->id_idioma ?>" type='button' class='btn btn-secondary'>Modificar</a>
+                        <a href="<?= BASE_URL ?>eliminar/idioma/<?= $idioma->id_idioma ?>" type='button' class='btn btn-danger'>Eliminar</a>
+                    </div>
+                    
+                </li>
+            <?php endforeach ?>    
+        </ul>
+       
+    </div>
+</div>
+
+<?php require 'templates/layouts/footer.phtml' ?>

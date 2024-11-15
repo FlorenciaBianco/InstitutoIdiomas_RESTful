@@ -1,0 +1,53 @@
+<?php
+require 'templates/layouts/header.phtml' ?>
+
+<div class="container text-center my-4 h-100 d-flex flex-column" style="background-image:url(https://www.usergioarboleda.edu.co/wp-content/uploads/2017/03/ser_bilingues_2.jpg); background-size: contain;
+    background-repeat: no-repeat">
+    <div class="row align-items-center">
+    <form action="" method="POST" enctype="multipart/form-data" class="my-4">
+        <div class="row">
+            <div class="col-9">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input required name="nombre" type="text" class="form-control"
+                    <?php if($profesor): ?> 
+                        value="<?= htmlspecialchars($profesor->nombre) ?>"
+                    <?php endif ?> >
+                </div>
+            </div>
+
+        <div class="col-3">
+            <div class="form-group">
+                <label>Seleccione Idioma</label>
+                <select required name="idioma" class="form-control">
+                    <option>Elija un Idioma</option>
+                    <?php foreach($indiceIdiomas as $id_idioma => $idioma): ?>
+                        <option value = "<?= $id_idioma ?>" <?php if ($profesor && $profesor->id_idioma==$id_idioma):?> selected <?php endif; ?>><?= htmlspecialchars($idioma) ?></option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Imagen</label>
+        <?php if($profesor): ?>
+            <img src =" <?= BASE_URL. $profesor ->imagen ?>"/>
+        <?php endif ?>
+        <input type= file name="imput_name"/>
+    </div>
+    <div class="form-group">
+        <label>Telefono</label>
+        <textarea name="telefono" class="form-control" rows="1"><?php if($profesor): ?><?= htmlspecialchars($profesor->telefono) ?><?php endif ?></textarea>
+    </div>
+    <div class="form-group">
+        <label>Email</label>
+        <textarea name="email" class="form-control" rows="1"><?php if($profesor): ?><?= htmlspecialchars($profesor->email) ?><?php endif ?></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Guardar</button>
+    
+    </form>
+    </div>
+</div>
+
+<?php require 'templates/layouts/footer.phtml' ?>

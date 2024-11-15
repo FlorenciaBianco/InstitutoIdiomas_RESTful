@@ -1,0 +1,22 @@
+<?php require 'templates/layouts/header.phtml' ?>
+
+<div class="container text-center my-4 py-4 d-flex flex-column" style="background-color: #f6f6f6">
+    <p class="fw-light">Instituto Idiomas es una plataforma online dinamica donde puedes aprender idiomas con la mejor calidad académica desde donde estés y cuando quieras.</p>
+    <p class="fw-lighter">Contamos con diferentes profesores especializados en el idioma que te gustaría aprender.</p>
+    <div class="my-4 d-flex flex-wrap align-items-center justify-content-center" style="gap: 20px;"> 
+            <?php foreach($idiomas as $idioma): ?>
+                <div class="card" style="width: 18rem; border: 1px solid #ddd; padding: 10px; background-color: #fff;">
+                    <?php if ($idioma->imagen): ?>
+                        <img src="<?= BASE_URL.$idioma->imagen ?>" alt="Imagen del idioma <?= htmlspecialchars($idioma->nombre) ?>" style="width: 100%; height: auto;">
+                    <?php endif ?>
+                    <div class="card-body">
+                        <h5 class="card-title"><?= htmlspecialchars($idioma->nombre) ?></h5>
+                        <p class="card-text"><?= substr($idioma->descripcion, 0, 50) ?></p>
+                        <a href="<?= BASE_URL ?>profesores/<?= $idioma->id_idioma ?>" type='button' class="btn btn-sm btn-outline-secondary">Profesores</a>
+                    </div>
+                </div>
+            <?php endforeach ?>
+    </div>
+</div>
+
+<?php require 'templates/layouts/footer.phtml' ?>
