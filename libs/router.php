@@ -2,6 +2,8 @@
 
 require_once './libs/request.php';
 require_once './libs/response.php';
+require_once './app/views/json.view.php';
+
 
 class Route {
     private $url;
@@ -71,8 +73,12 @@ class Router {
             }
         }
        
-        if ($this->defaultRoute != null)
+        if ($this->defaultRoute != null){
             $this->defaultRoute->run($this->request, $this->response);
+        } else {
+            $url = new JSONView();
+            $url->response("Not Found", 404);
+        }
     }
 
     public function addMiddleware($middleware) {

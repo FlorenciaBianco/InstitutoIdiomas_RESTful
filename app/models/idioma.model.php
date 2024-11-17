@@ -1,14 +1,14 @@
 <?php
 require_once 'config.php';
 require_once 'app/models/deploy.model.php';
-class IdiomaModel{
 
+class IdiomaModel{
     private $db;
 
     public function __construct(){ 
         $this->db = new PDO("mysql:host=".MYSQL_HOST .";dbname=".MYSQL_DB.";charset=utf8", MYSQL_USER, MYSQL_PASS);
     }
-    
+
     public function getAll($orderBy){    
         $sql = 'SELECT * FROM idioma';
         if($orderBy) {
@@ -16,8 +16,14 @@ class IdiomaModel{
                 case 'nombre':
                     $sql .= ' ORDER BY nombre asc';
                     break;
+                case '-nombre':
+                        $sql .= ' ORDER BY nombre desc';
+                        break;
                 case 'modulos':
                     $sql .= ' ORDER BY modulos asc';
+                    break;
+                case '-modulos':
+                    $sql .= ' ORDER BY modulos desc';
                     break;
             }
         }
@@ -52,31 +58,16 @@ class IdiomaModel{
         return $id;
     }
     
+    public function update($id, $nombre, $descripcion, $modulos, $image = null){
+        $query = $this->db->prepare('UPDATE idioma SET nombre = ?, descripcion = ?, modulos = ? WHERE id_idioma = ?');
+        return $query->execute([$nombre, $descripcion, $modulos, $id]);
+    }
+
     public function delete($id){
         $query = $this->db->prepare ('DELETE FROM idioma WHERE id_idioma = ?');
-        $query->execute([$id]); 
+        return $query->execute([$id]); 
     }
 
-    public function update($id, $nombre, $descripcion, $modulos, $image = null){
-        if(empty($image)){
-            $query = $this->db->prepare('UPDATE idioma SET nombre = ?, descripcion = ?, modulos = ? WHERE id_idioma = ?');
-            $query->execute([$nombre, $descripcion, $modulos, $id]);
-        } else{
-            $pathImg = $this->uploadImage($image);
-            $query = $this->db->prepare('UPDATE idioma SET nombre = ?, descripcion = ?, modulos = ?, imagen = ? WHERE id_idioma = ?');
-            $query->execute([$nombre, $descripcion, $modulos, $pathImg, $id]);
-        }
-
-    }
-
-    private function uploadImage($image){
-        $target = "docs/img/" . uniqid("", true) . "." . strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
-        $success =move_uploaded_file($image['tmp_name'], $target);
-       
-        return $target;
-    }
-
- 
 }
 
 

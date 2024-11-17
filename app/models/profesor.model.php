@@ -16,8 +16,14 @@ class ProfesorModel {
                 case 'nombre':
                     $sql .= ' ORDER BY nombre asc';
                     break;
+                case '-nombre':
+                    $sql .= ' ORDER BY nombre desc';
+                    break;
                 case 'idioma':
                     $sql .= ' ORDER BY id_idioma asc';
+                    break;
+                case '-idioma':
+                    $sql .= ' ORDER BY id_idioma desc';
                     break;
             }
         }
@@ -38,15 +44,6 @@ class ProfesorModel {
         return $profesor;
     }
     
-    public function getByIdioma($id) {
-        $query = $this->db->prepare('SELECT * FROM profesor WHERE id_idioma = ?');
-        $query->execute([$id]);
-    
-        $profesores = $query->fetchAll(PDO::FETCH_OBJ);
-    
-        return $profesores;
-            }
-
     public function insert ($nombre, $telefono, $email, $id_idioma, $imagen = null){
         $pathImg = null;
         
@@ -59,31 +56,16 @@ class ProfesorModel {
         $id = $this->db->lastInsertId();
     
         return $id;
-        }
+    }
+
+    public function update($id, $nombre, $telefono, $email, $id_idioma, $image = null){    
+            $query = $this->db->prepare('UPDATE profesor SET nombre = ?, telefono = ?, email = ?, id_idioma = ? WHERE id = ?');
+            return $query->execute([$nombre, $telefono, $email, $id_idioma, $id]);
+    }
 
     public function delete ($id) {
         $query = $this->db->prepare ('DELETE FROM profesor WHERE id = ?');
-        $query->execute([$id]); 
-        }
-
-    public function update($id, $nombre, $telefono, $email, $id_idioma, $image = null){
-       if(empty($image)){
-        $query = $this->db->prepare('UPDATE profesor SET nombre = ?, telefono = ?, email = ?, id_idioma = ? WHERE id = ?');
-        $query->execute([$nombre, $telefono, $email, $id_idioma, $id]);
-       }
-       else{
-        $pathImg = $this->uploadImage ($image);
-        $query = $this->db->prepare('UPDATE profesor SET nombre = ?, telefono = ?, email = ?, id_idioma = ?, imagen = ? WHERE id = ?');
-        $query->execute([$nombre, $telefono, $email, $id_idioma, $pathImg, $id]);
-       }
-        }
-        private function uploadImage($image){
-            $target = "docs/img/" . uniqid("", true) . "." . strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
-            move_uploaded_file($image['tmp_name'], $target);
-            
-            return $target;
-        }
-        
-
+        return $query->execute([$id]); 
+    }
 
 }

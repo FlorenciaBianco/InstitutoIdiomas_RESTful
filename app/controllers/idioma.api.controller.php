@@ -21,10 +21,11 @@
 
         public function getAll($req, $res) {
             $orderBy = false;
-            if(isset($req->query->orderBy))
+
+            if(isset($req->query->orderBy)){
                 $orderBy = $req->query->orderBy;
+            }
         
-            
             $idiomas = $this->model->getAll($orderBy);
             return $this->view->response($idiomas);
         }
@@ -40,12 +41,7 @@
     
             return $this->view->response($idioma);
         }
-    
-        public function showCategoria($nombre){
-            $profesores = $this->model->getById($nombre);
-            return $this->view->show($profesor);
-        }
-        
+         
         public function create($req, $res){
             
             if (empty($req->body->nombre)) {
@@ -62,56 +58,14 @@
             $descripcion = $req->body->descripcion;
             $modulos= $req->body->modulos;
 
-            // if($_FILES['input_name']['type'] == "image/jpg" || $_FILES['input_name']['type'] == "image/jpeg" || $_FILES['input_name']['type'] == "image/png"){ 
-            //     $id = $this->model->insert($nombre, $descripcion, $modulos, $_FILES['input_name']);
-            // } else {
-                $id = $this->model->insert($nombre, $descripcion, $modulos);
-            // }
-
+            $id = $this->model->insert($nombre, $descripcion, $modulos);
+            
             if (!$id) {
-                return $this->view->response("Error al insertar idioma", 500);
+                return $this->view->response("Error al crear idioma", 500);
             }
             
             $idioma = $this->model->getById($id);
             return $this->view->response($idioma, 201);
-        }
-
-        public function add(){
-            if ($_SERVER['REQUEST_METHOD']=='GET'){
-                return $this->view->showAddForm();
-            }
-            if (!isset($_POST['nombre']) || empty($_POST['nombre'])) {
-                return $this->view->showError('Falta completar el nombre del idioma');
-            }
-            if (!isset($_POST['descripcion']) || empty($_POST['descripcion'])) {
-                return $this->view->showError('Falta completar la descripcion');
-            }
-            if (!isset($_POST['modulos']) || empty($_POST['modulos'])) {
-                return $this->view->showError('Falta completar el modulos');
-            }
-
-            $nombre = $_POST['nombre'];
-            $descripcion = $_POST['descripcion'];
-            $modulos= $_POST['modulos'];
-
-            if($_FILES['input_name']['type'] == "image/jpg" || $_FILES['input_name']['type'] == "image/jpeg" || $_FILES['input_name']['type'] == "image/png"){ 
-                $id = $this->model->insert($nombre, $descripcion, $modulos, $_FILES['input_name']);
-            } else {
-                $id = $this->model->insert($nombre, $descripcion, $modulos);
-            }
-            header('Location: ' . BASE_URL."idiomas");
-        }
-
-        public function delete($id) {
-            $idioma = $this->model->getById($id);
-   
-           if (!$id) {
-               return $this->view->showError("No existe el idioma con el id_idioma=$id");
-           }
-
-           $this->model->delete($id);
-   
-           header('Location: ' . BASE_URL."idiomas");
         }
 
         public function update($req, $res) {
@@ -130,54 +84,32 @@
             $descripcion =  $req->body->descripcion;
             $modulos=  $req->body->modulos;
 
-            if($_FILES['input_name']['type'] == "image/jpg" || $_FILES['input_name']['type'] == "image/jpeg" || $_FILES['input_name']['type'] == "image/png"){ 
-                $id = $this->model->update($id, $nombre, $descripcion, $modulos, $_FILES['input_name']);
-            } else {
-                $id = $this->model->update($id, $nombre, $descripcion, $modulos);
+            $update = $this->model->update($id, $nombre, $descripcion, $modulos);
+            
+            if(!$update){
+                return $this->view->response('No se pudo actualizar el idioma', 400);
             }
-
             $idioma = $this->model->getById($id);
             $this->view->response($idioma, 200);
 
         }
 
-        public function update($id) {
-            if (!$id) {
-                return $this->view->showError("No existe el idioma con el id_idioma=$id");
-            }
-            if ($_SERVER['REQUEST_METHOD']=='GET'){
-                $idioma = $this->model->getById($id);
-                return $this->view->showUpdateForm($idioma);
-            }
-            if (!isset($_POST['nombre']) || empty($_POST['nombre'])) {
-                return $this->view->showError('Falta completar el nombre del idioma');
+        public function delete($req, $res) {
+            $id = $req->params->id;
+            $idioma = $this->model->getById($id);
+   
+            if(!$idioma) {
+               return $this->view->showError("El idioma con el id_idioma=$id no existe", 404);
             }
 
-            if (!isset($_POST['descripcion']) || empty($_POST['descripcion'])) {
-                return $this->view->showError('Falta completar la descripcion');
+            $delete = $this->model->delete($id);
+   
+            if(!$delete){
+                return $this->view->response('Error al borrar el idioma', 400);
             }
-
-            if (!isset($_POST['modulos']) || empty($_POST['modulos'])) {
-                return $this->view->showError('Falta completar el modulos');
-            }
-            $nombre = $_POST['nombre'];
-            $descripcion = $_POST['descripcion'];
-            $modulos= $_POST['modulos'];
-
-            if($_FILES['input_name']['type'] == "image/jpg" || $_FILES['input_name']['type'] == "image/jpeg" || $_FILES['input_name']['type'] == "image/png"){ 
-                $id = $this->model->update($id, $nombre, $descripcion, $modulos, $_FILES['input_name']);
-            } else {
-                $id = $this->model->update($id, $nombre, $descripcion, $modulos);
-            }
-
-            header('Location: ' . BASE_URL."idiomas");
-            
+          
+            return $this->view->response(" ", 204);
         }
-
-        public function showHome(){
-            $idiomas = $this->model->getAll();
-            return $this->view->showHome($idiomas);
-        }
-     
+        
     }
     
